@@ -41,15 +41,52 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """query on the current database session"""
-        new_dict = {}
-        for clss in classes:
-            if cls is None or cls is classes[clss] or cls is clss:
-                objs = self.__session.query(classes[clss]).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
-                    new_dict[key] = obj
-        return (new_dict)
+        """ Return a dictionary
+            Return:
+                returns a dictionary of __object
+        """
+        dic = {}
+        if cls:
+            if type(cls) is str:
+                cls = eval(cls)
+            query = self.__session.query(cls)
+            for elem in query:
+                key = "{}.{}".format(type(elem).__name__, elem.id)
+                dic[key] = elem
+        else:
+            lista = [State, City, User, Place, Review, Amenity]
+            for clase in lista:
+                query = self.__session.query(clase)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    dic[key] = elem
+        return (dic)
+
+    def count(self, cls=None):
+        """ Return an integer
+            Return:
+                returns the length of __object
+        """
+        count = 0
+
+        if cls:
+            if isinstance(cls, str):
+                raise ValueError("Providing class as Strings is not allowed.")
+            query = self.__session.query(cls)
+            count = query.count()
+        else:
+            classes = [State, City, User, Place, Review, Amenity]
+            for c in classes:
+                query = self.__session.query(c)
+                count += query.count()
+        return count
+
+    def get(self, cls, id):
+        '''
+            Returns the object based on the class and its ID,
+            or None if not found
+        '''
+        return self.__session.query(cls).get(id)
 
     def new(self, obj):
         """add the object to the current database session"""
