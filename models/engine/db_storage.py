@@ -62,31 +62,35 @@ class DBStorage:
                     dic[key] = elem
         return (dic)
 
-    def count(self, cls=None):
-        """ Return an integer
-            Return:
-                returns the length of __object
-        """
-        count = 0
-
-        if cls:
-            if isinstance(cls, str):
-                raise ValueError("Providing class as Strings is not allowed.")
-            query = self.__session.query(cls)
-            count = query.count()
-        else:
-            classes = [State, City, User, Place, Review, Amenity]
-            for c in classes:
-                query = self.__session.query(c)
-                count += query.count()
-        return count
-
     def get(self, cls, id):
-        '''
-            Returns the object based on the class and its ID,
-            or None if not found
-        '''
-        return self.__session.query(cls).get(id)
+        """
+        Returns the object based on the class name and its ID, or
+        None if not found
+        """
+        if cls not in classes.values():
+            return None
+
+        all_cls = models.storage.all(cls)
+        for value in all_cls.values():
+            if (value.id == id):
+                return value
+
+        return None
+
+    def count(self, cls=None):
+        """
+        count the number of objects in storage
+        """
+        all_class = classes.values()
+
+        if not cls:
+            count = 0
+            for clas in all_class:
+                count += len(models.storage.all(clas).values())
+        else:
+            count = len(models.storage.all(cls).values())
+
+        return count
 
     def new(self, obj):
         """add the object to the current database session"""
