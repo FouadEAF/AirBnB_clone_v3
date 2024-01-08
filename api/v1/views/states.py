@@ -28,7 +28,7 @@ def r_state_id(state_id):
                  strict_slashes=False)
 def del_state(state_id):
     """ Deletes a State object """
-    state = storage.get("State", state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
     state.delete()
@@ -53,7 +53,7 @@ def post_state():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_state(state_id):
     """ Updates a State object """
-    state = storage.get("State", state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
 
