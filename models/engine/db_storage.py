@@ -3,6 +3,7 @@
 Contains the class DBStorage
 """
 
+#from models import storage
 import models
 from models.amenity import Amenity
 from models.base_model import BaseModel, Base
@@ -40,7 +41,7 @@ class DBStorage:
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
-    def all(self, cls=None):
+    '''def all(self, cls=None):
         """ Return a dictionary
             Return:
                 returns a dictionary of __object
@@ -60,7 +61,19 @@ class DBStorage:
                 for elem in query:
                     key = "{}.{}".format(type(elem).__name__, elem.id)
                     dic[key] = elem
-        return (dic)
+        return (dic)'''
+
+    def all(self, cls=None):
+        """query on the current database session"""
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
+
 
     def get(self, cls, id):
         """
@@ -70,12 +83,20 @@ class DBStorage:
         if cls not in classes.values():
             return None
 
-        all_cls = models.storage.all(cls)
-        for value in all_cls.values():
-            if (value.id == id):
-                return value
+        #all_cls = models.storage.all(cls) 
+        #result = all_cls.get(f"{cls.__name__}.{id}", None)
 
-        return None
+        '''d_obj = self.all(cls)
+        for key, value in d_obj.items():
+            if key.split(".")[1] == id:
+                return value'''
+
+        #return result
+        objs = models.storage.all(cls.__name__).values()
+        for obj in objs:
+            if obj.id == id:
+                return obj
+
 
     def count(self, cls=None):
         """
