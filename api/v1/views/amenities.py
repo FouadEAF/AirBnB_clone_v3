@@ -7,7 +7,6 @@ from models.amenity import Amenity
 
 
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/cities_by_state_get.yml', methods=['GET'])
 def amenities():
     """ Retrieves the list of all Amenity objects """
     d_amenities = storage.all(Amenity)
