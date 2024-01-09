@@ -22,14 +22,14 @@ app.config['SWAGGER'] = {
     "specs": [
         {
             "version": "1.0",
-            "title": "HBNB API",
+            "title": "AirBnB clone - RESTful API",
             "endpoint": 'v1_views',
             "description": 'HBNB REST API',
             "route": '/v1/views',
         }
     ]
 }
-swagger = Swagger(app)
+Swagger(app)
 
 
 @app.teardown_appcontext
