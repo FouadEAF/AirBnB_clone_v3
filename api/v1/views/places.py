@@ -14,7 +14,7 @@ from os import getenv
                  strict_slashes=False)
 def places(city_id):
     """ Retrieves the list of all Place objects """
-    city = storage.get("City", city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
     return jsonify([place.to_dict() for place in city.places])
@@ -23,7 +23,7 @@ def places(city_id):
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def r_place_id(place_id):
     """ Retrieves a Place object """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
     return jsonify(place.to_dict())
@@ -33,7 +33,7 @@ def r_place_id(place_id):
                  strict_slashes=False)
 def del_place(place_id):
     """ Deletes a Place object """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
     place.delete()
@@ -45,7 +45,7 @@ def del_place(place_id):
                  strict_slashes=False)
 def post_place(city_id):
     """ Creates a Place object """
-    city = storage.get("City", city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
     new_place = request.get_json()
@@ -54,7 +54,7 @@ def post_place(city_id):
     if "user_id" not in new_place:
         abort(400, "Missing user_id")
     user_id = new_place['user_id']
-    if not storage.get("User", user_id):
+    if not storage.get(User, user_id):
         abort(404)
     if "name" not in new_place:
         abort(400, "Missing name")
@@ -69,7 +69,7 @@ def post_place(city_id):
                  strict_slashes=False)
 def put_place(place_id):
     """ Updates a Place object """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
 
@@ -107,7 +107,7 @@ def places_search():
     places = []
 
     if body_r.get('states'):
-        states = [storage.get("State", id) for id in body_r.get('states')]
+        states = [storage.get(State, id) for id in body_r.get('states')]
 
         for state in states:
             for city in state.cities:
@@ -115,7 +115,7 @@ def places_search():
                     places.append(place)
 
     if body_r.get('cities'):
-        cities = [storage.get("City", id) for id in body_r.get('cities')]
+        cities = [storage.get(City, id) for id in body_r.get('cities')]
 
         for city in cities:
             for place in city.places:
@@ -127,7 +127,7 @@ def places_search():
         places = [place for place in places.values()]
 
     if body_r.get('amenities'):
-        ams = [storage.get("Amenity", id) for id in body_r.get('amenities')]
+        ams = [storage.get(Amenity, id) for id in body_r.get('amenities')]
         i = 0
         limit = len(places)
         HBNB_API_HOST = getenv('HBNB_API_HOST')
