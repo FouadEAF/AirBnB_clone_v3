@@ -3,6 +3,7 @@
 from api.v1.views import app_views
 from flask import jsonify, abort, make_response, request
 from models import storage
+from models.user import User
 from models.city import City
 from models.place import Place
 import requests
@@ -15,6 +16,7 @@ from os import getenv
 def places(city_id):
     """ Retrieves the list of all Place objects """
     city = storage.get(City, city_id)
+    print(city)
     if not city:
         abort(404)
     return jsonify([place.to_dict() for place in city.places])
