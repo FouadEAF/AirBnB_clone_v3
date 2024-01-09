@@ -5,13 +5,14 @@ from flask import jsonify, abort, make_response, request
 from models import storage
 from models.place import Place
 from models.review import Review
+from models.user import User
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
                  strict_slashes=False)
 def reviews(place_id):
     """ Retrieves the list of all Review objects """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
     return jsonify([review.to_dict() for review in place.reviews])
@@ -20,7 +21,7 @@ def reviews(place_id):
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
 def r_review_id(review_id):
     """ Retrieves a Review object """
-    review = storage.get("Review", review_id)
+    review = storage.get(Review, review_id)
     if not review:
         abort(404)
     return jsonify(review.to_dict())
@@ -30,7 +31,7 @@ def r_review_id(review_id):
                  strict_slashes=False)
 def del_review(review_id):
     """ Deletes a Review object """
-    review = storage.get("Review", review_id)
+    review = storage.get(Review, review_id)
     if not review:
         abort(404)
     review.delete()
@@ -42,7 +43,7 @@ def del_review(review_id):
                  strict_slashes=False)
 def post_review(place_id):
     """ Creates a Review object """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
     new_review = request.get_json()
@@ -51,7 +52,7 @@ def post_review(place_id):
     if "user_id" not in new_review:
         abort(400, "Missing user_id")
     user_id = new_review['user_id']
-    if not storage.get("User", user_id):
+    if not storage.get(User, user_id):
         abort(404)
     if "text" not in new_review:
         abort(400, "Missing text")
@@ -66,7 +67,7 @@ def post_review(place_id):
                  strict_slashes=False)
 def put_review(review_id):
     """ Updates a Review object """
-    review = storage.get("Review", review_id)
+    review = storage.get(Review, review_id)
     if not review:
         abort(404)
 
