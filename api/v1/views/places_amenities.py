@@ -14,14 +14,14 @@ from os import getenv
                  strict_slashes=False)
 def places_amenities(place_id):
     """ Retrieves the list of all Amenities objects in a Place """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
 
     if getenv('HBNB_TYPE_STORAGE') == 'db':
         l = [amenity.to_dict() for amenity in place.amenities]
     else:
-        l = [storage.get("Amenity", id).to_dict() for id in place.amenity_ids]
+        l = [storage.get(Amenity, id).to_dict() for id in place.amenity_ids]
     return jsonify(l)
 
 
@@ -29,11 +29,11 @@ def places_amenities(place_id):
                  methods=['DELETE'], strict_slashes=False)
 def del_places_amenities(place_id, amenity_id):
     """ Deletes an Amenity object """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
 
-    amenity = storage.get("Amenity", amenity_id)
+    amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
 
@@ -56,11 +56,11 @@ def del_places_amenities(place_id, amenity_id):
                  strict_slashes=False)
 def link_amenity_place(place_id, amenity_id):
     """ Links an Amenity and a Place """
-    place = storage.get("Place", place_id)
+    place = storage.get(Place, place_id)
     if not place:
         abort(404)
 
-    amenity = storage.get("Amenity", amenity_id)
+    amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
 
