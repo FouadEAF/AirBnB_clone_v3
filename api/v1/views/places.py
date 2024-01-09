@@ -3,6 +3,7 @@
 from api.v1.views import app_views
 from flask import jsonify, abort, make_response, request
 from models import storage
+from models.state import State
 from models.user import User
 from models.city import City
 from models.place import Place
@@ -110,7 +111,7 @@ def places_search():
 
     if body_r.get('states'):
         states = [storage.get(State, id) for id in body_r.get('states')]
-
+        print('States are :', states)
         for state in states:
             for city in state.cities:
                 for place in city.places:
