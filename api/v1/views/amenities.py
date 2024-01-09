@@ -4,9 +4,11 @@ from api.v1.views import app_views
 from flask import jsonify, abort, make_response, request
 from models import storage
 from models.amenity import Amenity
+from flasgger.utils import swag_from
 
 
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
+@swag_from('documentation/cities_by_state_get.yml', methods=['GET'])
 def amenities():
     """ Retrieves the list of all Amenity objects """
     d_amenities = storage.all(Amenity)
@@ -15,9 +17,10 @@ def amenities():
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET'],
                  strict_slashes=False)
+@swag_from('documentation/amenities_get', methods=['GET'])
 def r_amenity_id(amenity_id):
     """ Retrieves Amenity object """
-    amenity = storage.get("Amenity", amenity_id)
+    amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
     return jsonify(amenity.to_dict())
@@ -25,9 +28,10 @@ def r_amenity_id(amenity_id):
 
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
                  strict_slashes=False)
+@swag_from('documentation/amenities_delete', methods=['DELETE'])
 def del_amenity(amenity_id):
-    """ Deletes a Amenity object """
-    amenity = storage.get("Amenity", amenity_id)
+    """ Deletes an Amenity object """
+    amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
     amenity.delete()
@@ -36,6 +40,7 @@ def del_amenity(amenity_id):
 
 
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
+@swag_from('documentation/amenities_post', methods=['POST'])
 def post_amenity():
     """ Creates a Amenity object """
     new_amenity = request.get_json()
@@ -51,9 +56,10 @@ def post_amenity():
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'],
                  strict_slashes=False)
+@swag_from('documentation/amenities_put', methods=['PUT'])
 def put_amenity(amenity_id):
     """ Updates a Amenity object """
-    amenity = storage.get("Amenity", amenity_id)
+    amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
 
