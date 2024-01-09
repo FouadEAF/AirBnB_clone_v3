@@ -29,7 +29,7 @@ app.config['SWAGGER'] = {
         }
     ]
 }
-Swagger(app)
+swagger = Swagger(app)
 
 
 @app.teardown_appcontext
